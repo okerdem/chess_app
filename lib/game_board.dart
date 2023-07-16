@@ -157,10 +157,27 @@ class _GameBoardState extends State<GameBoard> {
 
   void pieceSelection(int selectedRow, int selectedColumn) {
     setState(() {
-      if (board[selectedRow][selectedColumn] != null) {
+      //no piece selected, this is first selection
+      if (selectedPiece == null && board[selectedRow][selectedColumn] != null) {
         selectedPiece = board[selectedRow][selectedColumn];
-        this.selectedColumn = selectedColumn;
         this.selectedRow = selectedRow;
+        this.selectedColumn = selectedColumn;
+      }
+
+      //a piece already selected but user can select another one of their pieces
+      else if (board[selectedRow][selectedColumn] != null &&
+          board[selectedRow][selectedColumn]!.isWhite ==
+              selectedPiece!.isWhite) {
+        selectedPiece = board[selectedRow][selectedColumn];
+        this.selectedRow = selectedRow;
+        this.selectedColumn = selectedColumn;
+      }
+      
+      //if there is a piece selected and user taps on a square that is a valid move, move there
+      else if (selectedPiece != null &&
+          validMoves.any((element) =>
+              element[0] == selectedRow && element[1] == selectedColumn)) {
+        movePiece(selectedRow, selectedColumn);
       }
 
       //assign selected pieces valid moves
@@ -174,8 +191,12 @@ class _GameBoardState extends State<GameBoard> {
       int row, int column, ChessPiece? selectedPiece) {
     List<List<int>> candidateMoves = [];
 
+    if (selectedPiece == null) {
+      return [];
+    }
+
     //directions based on color
-    int direction = selectedPiece!.isWhite ? -1 : 1;
+    int direction = selectedPiece.isWhite ? -1 : 1;
 
     switch (selectedPiece.type) {
       case ChessPieceType.pawn:
@@ -198,13 +219,15 @@ class _GameBoardState extends State<GameBoard> {
         //can kill diagonally
         if (isInBoard(row + direction, column - 1) &&
             board[row + direction][column - 1] != null &&
-            board[row + direction][column - 1]!.isWhite) {
+            board[row + direction][column - 1]!.isWhite !=
+                selectedPiece.isWhite) {
           candidateMoves.add([row + direction, column - 1]);
         }
 
         if (isInBoard(row + direction, column + 1) &&
             board[row + direction][column + 1] != null &&
-            board[row + direction][column + 1]!.isWhite) {
+            board[row + direction][column + 1]!.isWhite !=
+                selectedPiece.isWhite) {
           candidateMoves.add([row + direction, column + 1]);
         }
 
@@ -365,6 +388,20 @@ class _GameBoardState extends State<GameBoard> {
   }
 
   //move piece (tapping empty square throws error and tapping it after selecting a piece copies its move directions like there is a in where you tapped.)
+
+  void movePiece(var newRow, var newColumn) {
+    //move the piece and clear the old spot
+    board[newRow][newColumn] = selectedPiece;
+    board[selectedRow][selectedColumn] = null;
+
+    //clear selection
+    setState(() {
+      selectedPiece = null;
+      selectedRow = -1;
+      selectedColumn = -1;
+      validMoves = [];
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
