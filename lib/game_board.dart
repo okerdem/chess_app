@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_chess_app/components/pieces.dart';
 import 'package:flutter_chess_app/components/square.dart';
@@ -195,6 +193,8 @@ class _GameBoardState extends State<GameBoard> {
           validMoves.any((element) =>
               element[0] == selectedRow && element[1] == selectedColumn)) {
         movePiece(selectedRow, selectedColumn);
+      } else {
+        selectedPiece = null;
       }
 
       // assign selected pieces valid moves
@@ -212,18 +212,18 @@ class _GameBoardState extends State<GameBoard> {
       return [];
     }
 
-    //directions based on color
+    // directions based on color
     int direction = selectedPiece.isWhite ? -1 : 1;
 
     switch (selectedPiece.type) {
       case ChessPieceType.pawn:
-        //can move one step forvard if the square is empty
+        // can move one step forvard if the square is empty
         if (isInBoard(row + direction, column) &&
             board[row + direction][column] == null) {
           candidateMoves.add([row + direction, column]);
         }
 
-        //can move two step forward at initial position
+        // can move two step forward at initial position
         if ((row == 1 && !selectedPiece.isWhite) ||
             (row == 6 && selectedPiece.isWhite)) {
           if (isInBoard(row + 2 * direction, column) &&
@@ -233,7 +233,7 @@ class _GameBoardState extends State<GameBoard> {
           }
         }
 
-        //can kill diagonally
+        // can kill diagonally
         if (isInBoard(row + direction, column - 1) &&
             board[row + direction][column - 1] != null &&
             board[row + direction][column - 1]!.isWhite !=
@@ -250,12 +250,12 @@ class _GameBoardState extends State<GameBoard> {
 
         break;
       case ChessPieceType.rook:
-        //horizontal and vertical directions
+        // horizontal and vertical directions
         var rookMoves = {
-          [-1, 0], //up
-          [1, 0], //down
-          [0, -1], //left
-          [0, 1], //right
+          [-1, 0], // up
+          [1, 0], // down
+          [0, -1], // left
+          [0, 1], // right
         };
 
         for (var direction in rookMoves) {
@@ -268,9 +268,9 @@ class _GameBoardState extends State<GameBoard> {
             }
             if (board[newRow][newColumn] != null) {
               if (board[newRow][newColumn]!.isWhite != selectedPiece.isWhite) {
-                candidateMoves.add([newRow, newColumn]); //kill
+                candidateMoves.add([newRow, newColumn]); // kill
               }
-              break; //blocked
+              break; // blocked
             }
             candidateMoves.add([newRow, newColumn]);
             i++;
@@ -279,16 +279,16 @@ class _GameBoardState extends State<GameBoard> {
 
         break;
       case ChessPieceType.knight:
-        //L move directions
+        // L move directions
         var knightMoves = {
-          [-2, 1], //up 2 right 1
-          [-2, -1], //up 2 left 1
-          [-1, 2], //up 1 right 2
-          [-1, -2], //up 1 left 2
-          [2, 1], //down 2 right 1
-          [2, -1], //down 2 left 1
-          [1, 2], //down 1 right 2
-          [1, -2], //down 1 left 2
+          [-2, 1], // up 2 right 1
+          [-2, -1], // up 2 left 1
+          [-1, 2], // up 1 right 2
+          [-1, -2], // up 1 left 2
+          [2, 1], // down 2 right 1
+          [2, -1], // down 2 left 1
+          [1, 2], // down 1 right 2
+          [1, -2], // down 1 left 2
         };
 
         for (var direction in knightMoves) {
@@ -299,20 +299,20 @@ class _GameBoardState extends State<GameBoard> {
           }
           if (board[newRow][newColumn] != null) {
             if (board[newRow][newColumn]!.isWhite != selectedPiece.isWhite) {
-              candidateMoves.add([newRow, newColumn]); //kill
+              candidateMoves.add([newRow, newColumn]); // kill
             }
-            continue; //blocked
+            continue; // blocked
           }
           candidateMoves.add([newRow, newColumn]);
         }
         break;
       case ChessPieceType.bishop:
-        //diagonal move directions
+        // diagonal move directions
         var bishopMoves = {
-          [-1, 1], //up right
-          [-1, -1], //up left
-          [1, 1], //down right
-          [1, -1], //down left
+          [-1, 1], // up right
+          [-1, -1], // up left
+          [1, 1], // down right
+          [1, -1], // down left
         };
 
         for (var direction in bishopMoves) {
@@ -326,9 +326,9 @@ class _GameBoardState extends State<GameBoard> {
             }
             if (board[newRow][newColumn] != null) {
               if (board[newRow][newColumn]!.isWhite != selectedPiece.isWhite) {
-                candidateMoves.add([newRow, newColumn]); //kill
+                candidateMoves.add([newRow, newColumn]); // kill
               }
-              break; //blocked
+              break; // blocked
             }
             candidateMoves.add([newRow, newColumn]);
             i++;
@@ -336,16 +336,16 @@ class _GameBoardState extends State<GameBoard> {
         }
         break;
       case ChessPieceType.queen:
-        //all eight directions
+        // all eight directions
         var queenMoves = {
-          [-1, 0], //up
-          [1, 0], //down
-          [0, 1], //right
-          [0, -1], //left
-          [-1, 1], //up right
-          [-1, -1], //up left
-          [1, 1], //down right
-          [1, -1], //down left
+          [-1, 0], // up
+          [1, 0], // down
+          [0, 1], // right
+          [0, -1], // left
+          [-1, 1], // up right
+          [-1, -1], // up left
+          [1, 1], // down right
+          [1, -1], // down left
         };
 
         for (var direction in queenMoves) {
@@ -359,9 +359,9 @@ class _GameBoardState extends State<GameBoard> {
             }
             if (board[newRow][newColumn] != null) {
               if (board[newRow][newColumn]!.isWhite != selectedPiece.isWhite) {
-                candidateMoves.add([newRow, newColumn]); //kill
+                candidateMoves.add([newRow, newColumn]); // kill
               }
-              break; //blocked
+              break; // blocked
             }
             candidateMoves.add([newRow, newColumn]);
             i++;
@@ -369,16 +369,16 @@ class _GameBoardState extends State<GameBoard> {
         }
         break;
       case ChessPieceType.king:
-        //all eight directions
+        // all eight directions
         var kingMoves = {
-          [-1, 0], //up
-          [1, 0], //down
-          [0, 1], //right
-          [0, -1], //left
-          [-1, 1], //up right
-          [-1, -1], //up left
-          [1, 1], //down right
-          [1, -1], //down left
+          [-1, 0], // up
+          [1, 0], // down
+          [0, 1], // right
+          [0, -1], // left
+          [-1, 1], // up right
+          [-1, -1], // up left
+          [1, 1], // down right
+          [1, -1], // down left
         };
 
         for (var direction in kingMoves) {
@@ -391,9 +391,9 @@ class _GameBoardState extends State<GameBoard> {
 
           if (board[newRow][newColumn] != null) {
             if (board[newRow][newColumn]!.isWhite != selectedPiece.isWhite) {
-              candidateMoves.add([newRow, newColumn]); //kill
+              candidateMoves.add([newRow, newColumn]); // kill
             }
-            continue; //blocked
+            continue; // blocked
           }
 
           candidateMoves.add([newRow, newColumn]);
@@ -429,7 +429,7 @@ class _GameBoardState extends State<GameBoard> {
     return realValidMoves;
   }
 
-  // move piece (tapping empty square throws error and tapping it after selecting a piece copies its move directions like there is a in where you tapped.)
+  // move piece
   void movePiece(var newRow, var newColumn) {
     // if the new spot has an enemy piece
     // dd the captured piece to the appropriate captured list
@@ -469,6 +469,23 @@ class _GameBoardState extends State<GameBoard> {
       selectedColumn = -1;
       validMoves = [];
     });
+
+    // check if its check mate
+    if (isCheckMate(!isWhiteTurn)) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text("CHECK MATE !"),
+          // play again button
+          actions: [
+            TextButton(
+              onPressed: resetGame,
+              child: const Text("Play Again"),
+            ),
+          ],
+        ),
+      );
+    }
 
     // change turns
     isWhiteTurn = !isWhiteTurn;
@@ -544,6 +561,48 @@ class _GameBoardState extends State<GameBoard> {
     return !kingInCheck;
   }
 
+  // is it check mate ?
+  bool isCheckMate(bool isWhiteKing) {
+    // if the king is not in check, then its not checkmate
+    if (!isKingInCheck(isWhiteKing)) {
+      return false;
+    }
+
+    // if there is at least one valid move for player, then its not checkmate
+    for (var i = 0; i < 8; i++) {
+      for (var j = 0; j < 8; j++) {
+        // skip empty squares and rival pieces
+        if (board[i][j] == null || board[i][j]!.isWhite != isWhiteKing) {
+          continue;
+        }
+        List<List<int>> pieceValidMoves =
+            calculatedRealValidMoves(i, j, board[i][j], true);
+
+        if (pieceValidMoves.isNotEmpty) {
+          return false;
+        }
+      }
+    }
+
+    // if no valid moves left and up conditions not met then its checkmate
+    return true;
+  }
+
+  // reset game
+  void resetGame() {
+    if (checkStatus) {
+      Navigator.pop(context);
+    }
+    _initializeBoard();
+    checkStatus = false;
+    whitePiecesCaptured.clear();
+    blackPiecesCaptured.clear();
+    whiteKingPosition = [7, 4];
+    blackKingPosition = [0, 4];
+    isWhiteTurn = true;
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -599,6 +658,15 @@ class _GameBoardState extends State<GameBoard> {
                 );
               },
             ),
+          ),
+
+          // restart button
+          ElevatedButton(
+            onPressed: resetGame,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.green[200],
+            ),
+            child: const Text("Restart"),
           ),
 
           // pieces captured
