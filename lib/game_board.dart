@@ -660,15 +660,6 @@ class _GameBoardState extends State<GameBoard> {
             ),
           ),
 
-          // restart button
-          ElevatedButton(
-            onPressed: resetGame,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.green[200],
-            ),
-            child: const Text("Restart"),
-          ),
-
           // pieces captured
           Expanded(
             child: GridView.builder(
@@ -682,6 +673,51 @@ class _GameBoardState extends State<GameBoard> {
               ),
             ),
           ),
+
+          Row(
+            children: [
+              // restart button
+              Expanded(
+                child: Container(
+                  margin: const EdgeInsets.only(
+                    left: 15.0,
+                    right: 15.0,
+                  ),
+                  child: ElevatedButton(
+                    onPressed: resetGame,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green[300],
+                    ),
+                    child: const Text("Restart"),
+                  ),
+                ),
+              ),
+
+              // menu button
+              Expanded(
+                child: Container(
+                  margin: const EdgeInsets.only(
+                    left: 15.0,
+                    right: 15.0,
+                  ),
+                  child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        resetGame();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green[500],
+                      ),
+                      child: const Text(
+                        "Menu",
+                        style: TextStyle(
+                          fontSize: 15.0,
+                        ),
+                      )),
+                ),
+              ),
+            ],
+          )
         ],
       ),
     );
