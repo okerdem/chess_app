@@ -606,7 +606,7 @@ class _GameBoardState extends State<GameBoard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: scaffoldColor,
+      backgroundColor: Theme.of(context).colorScheme.primary,
       body: Column(
         children: [
           // pieces captured
@@ -686,7 +686,7 @@ class _GameBoardState extends State<GameBoard> {
                   child: ElevatedButton(
                     onPressed: resetGame,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green[300],
+                      backgroundColor: Theme.of(context).colorScheme.secondary,
                     ),
                     child: const Text("Restart"),
                   ),
@@ -706,7 +706,7 @@ class _GameBoardState extends State<GameBoard> {
                         resetGame();
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green[500],
+                        backgroundColor: Theme.of(context).colorScheme.secondary,
                       ),
                       child: const Text(
                         "Menu",

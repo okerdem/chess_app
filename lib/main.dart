@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_chess_app/menu.dart';
 import 'package:flutter_chess_app/themes/dark_theme.dart';
 import 'package:flutter_chess_app/themes/light_theme.dart';
-import 'game_board.dart';
 
 void main() {
   runApp(const MyApp());
@@ -22,12 +21,12 @@ class _MyAppState extends State<MyApp> {
   ThemeMode _themeMode = ThemeMode.system;
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      //theme: lightTheme,
-      //darkTheme: darkTheme,
-      //themeMode: _themeMode,
+    return MaterialApp(
+      theme: lightTheme,
+      darkTheme: darkTheme,
+      themeMode: _themeMode,
       debugShowCheckedModeBanner: false,
-      home: Menu(),
+      home: const Menu(),
     );
   }
 

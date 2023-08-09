@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chess_app/game_board.dart';
+import 'package:flutter_chess_app/main.dart';
 
 class Menu extends StatefulWidget {
   const Menu({super.key});
@@ -9,13 +10,16 @@ class Menu extends StatefulWidget {
 }
 
 class _MenuState extends State<Menu> {
+  bool _darkTheme = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: Center(
         child: Row(
           children: [
+            const Spacer(),
             Expanded(
               child: Center(
                 child: ElevatedButton(
@@ -29,6 +33,9 @@ class _MenuState extends State<Menu> {
                       ),
                     );
                   },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Theme.of(context).colorScheme.secondary,
+                  ),
                   child: const Text(
                     "Play",
                     style: TextStyle(
@@ -37,7 +44,24 @@ class _MenuState extends State<Menu> {
                   ),
                 ),
               ),
-            )
+            ),
+            Expanded(
+              child: IconButton(
+                onPressed: () {
+                  setState(() {
+                    _darkTheme
+                        ? MyApp.of(context).changeTheme(ThemeMode.dark)
+                        : MyApp.of(context).changeTheme(ThemeMode.light);
+                    _darkTheme = !_darkTheme;
+                  });
+                },
+                color: _darkTheme ? Colors.grey[400] : Colors.yellow,
+                iconSize: 40,
+                icon: _darkTheme
+                    ? const Icon(Icons.light_mode_outlined)
+                    : const Icon(Icons.light_mode),
+              ),
+            ),
           ],
         ),
       ),
