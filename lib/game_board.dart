@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chess_app/components/pieces.dart';
 import 'package:flutter_chess_app/components/square.dart';
-import 'package:flutter_chess_app/values/colors.dart';
 import 'components/captured_piece.dart';
 import 'helpers/helper_methods.dart';
 
